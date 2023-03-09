@@ -7,7 +7,7 @@ const NavigationBar = () => <Navbar
 >
     <div className="flex ml-auto space-x-6">
         <DarkThemeToggle/>
-        <Button color="gray" href="http://github.com/andrea-deluca" target={"_blank"}>
+        <Button color="gray" href="https://github.com/andrea-deluca/NFT-collection-whitelist-dapp" target={"_blank"}>
             <FaGithub className="mr-3"/>
             See on Github
         </Button>
