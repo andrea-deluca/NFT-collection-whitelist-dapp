@@ -7,7 +7,7 @@ import {Alert, Button, Spinner} from 'flowbite-react'
 import Web3Modal from 'web3modal'
 import {Contract, providers} from 'ethers'
 
-import {abi, WHITELIST_CONTRACT_ADDRESS} from "@/constants";
+import {WHITELIST_CONTRACT_ADDRESS, whitelistABI as abi} from "@/constants";
 import {Footer, Navbar} from "@/components";
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
     // joinedWhitelist keeps track of whether the current metamask address has joined the Whitelist or not
     const [joinedWhitelist, setJoinedWhitelist] = useState(false);
     // loading is set to true when we are waiting for a transaction to get mined
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     // numberOfWhitelisted tracks the number of addresses' whitelisted
     const [numberOfWhitelisted, setNumberOfWhitelisted] = useState(undefined);
     // Create a reference to the Web3 Modal (used for connecting to Metamask) which persists as long as the page is open
@@ -40,11 +40,11 @@ export default function Home() {
         const provider = await web3ModalRef.current.connect();
         const web3Provider = new providers.Web3Provider(provider);
 
-        // If user is not connected to the Goerli network, let them know and throw an error
+        // If user is not connected to the Sepolia network, let them know and throw an error
         const {chainId} = await web3Provider.getNetwork();
-        if (chainId !== 5) {
-            window.alert("Change the network to Goerli");
-            throw new Error("Change network to Goerli");
+        if (chainId !== 11155111) {
+            window.alert("Change the network to Sepolia");
+            throw new Error("Change network to Sepolia");
         }
 
         if (needSigner) {
@@ -136,9 +136,12 @@ export default function Home() {
             await getProviderOrSigner();
             setWalletConnected(true);
 
-            checkIfAddressInWhitelist();
-            getNumberOfWhitelisted();
+            Promise.all([
+                checkIfAddressInWhitelist(),
+                getNumberOfWhitelisted()
+            ]).finally(() => setLoading(false))
         } catch (err) {
+            setLoading(false)
             console.error(err);
         }
     }
@@ -172,47 +175,52 @@ export default function Home() {
             // Assign the Web3Modal class to the reference object by setting its `current` value
             // The `current` value is persisted throughout as long as this page is open
             web3ModalRef.current = new Web3Modal({
-                network: 'goerli',
+                network: 'sepolia',
                 providerOptions: {},
                 disableInjectedProvider: false
             });
-            connectWallet();
+            connectWallet()
         } else {
-            checkIfAddressInWhitelist();
-            getNumberOfWhitelisted();
+            Promise.all([
+                checkIfAddressInWhitelist(),
+                getNumberOfWhitelisted()
+            ]).finally(() => setLoading(false))
         }
     }, [walletConnected])
 
-    return (
-        <>
-            <Head>
-                <title>Crypto Devs</title>
-                <meta name="description" content="Demo NFT Collection Whitelist DApp"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1"/>
-                <link rel="icon" href="/favicon.ico"/>
-            </Head>
-            <Navbar/>
-            <main className="h-screen flex flex-col justify-center items-center dark:bg-gray-900 space-y-12">
-                <div className={"text-center"}>
-                    <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-                        Welcome to <mark className="px-2 text-white bg-blue-600 rounded dark:bg-blue-500">Crypto
-                        Devs</mark>
-                    </h1>
-                    <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
-                        It is an NFT collection for developers in Crypto.
-                    </p>
-                </div>
+    if (!loading)
+        return (
+            <>
+                <Head>
+                    <title>Crypto Devs</title>
+                    <meta name="description" content="Demo NFT Collection Whitelist DApp"/>
+                    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                    <link rel="icon" href="/favicon.ico"/>
+                </Head>
+                <Navbar/>
+                <main className="h-screen flex flex-col justify-center items-center dark:bg-gray-900 space-y-12">
+                    <div className={"text-center"}>
+                        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+                            Welcome to <mark className="px-2 text-white bg-blue-600 rounded dark:bg-blue-500">Crypto
+                            Devs</mark>
+                        </h1>
+                        <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+                            It is an NFT collection for developers in Crypto.
+                        </p>
+                    </div>
 
-                {walletConnected && <Alert color="info" className={"px-16"}>
+                    {walletConnected && <Alert color="info" className={"px-16"}>
                     <span className={"font-bold"}>
                     {numberOfWhitelisted} have already joined the Whitelist
                     </span>
-                </Alert>}
+                    </Alert>}
+                    {renderButton()}
+                </main>
+                <Footer/>
+            </>
+        )
 
-                {renderButton()}
-
-            </main>
-            <Footer/>
-        </>
-    )
+    return <div className={"h-screen w-screen flex justify-center items-center dark:bg-gray-900"}>
+        <Spinner size={"xl"} aria-label="Loading spinner" className={"dark:text-white"}/>
+    </div>
 }

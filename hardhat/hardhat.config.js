@@ -5,7 +5,7 @@ require("dotenv").config({path: ".env"});
 module.exports = {
     solidity: "0.8.18",
     networks: {
-        goerli: {
+        sepolia: {
             url: process.env.QUICKNODE_HTTP_URL,
             accounts: [process.env.PRIVATE_KEY]
         }
