@@ -65,7 +65,7 @@ export const whitelistABI = [
     }
 ];
 
-export const NFT_CONTRACT_ADDRESS = "0xfE456350552feF903Cc6779cBC4b1ca92144B823";
+export const NFT_CONTRACT_ADDRESS = "0xD44B2e199611812e58dc8e6ccd3189298E8Bc3A8";
 export const cryptoDevsABI = [
     {
         "inputs": [
