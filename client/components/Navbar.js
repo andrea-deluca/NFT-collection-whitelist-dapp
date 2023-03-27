@@ -1,6 +1,12 @@
-import {Navbar, Button, DarkThemeToggle} from "flowbite-react";
+import {Button, DarkThemeToggle, Navbar} from "flowbite-react";
 import {FaGithub} from 'react-icons/fa'
 import Link from "next/link";
+
+const navigation = [
+    {label: "Home", href: "/"},
+    {label: "Presale", href: "/presale"},
+    {label: "ICO", href: "/ico"},
+]
 
 const NavigationBar = () => <Navbar
     fluid={true}
@@ -8,12 +14,12 @@ const NavigationBar = () => <Navbar
 >
     <div className="flex justify-between w-full items-center">
         <div className="flex space-x-6">
-            <Link className="dark:text-white text-slate-800 hover:underline font-semibold tracking-wider" href="/">
-                Home
-            </Link>
-            <Link className="dark:text-white text-slate-800 hover:underline font-semibold tracking-wider" href="/presale">
-                Presale
-            </Link>
+            {navigation.map((item, idx) => (
+                <Link key={idx} className="dark:text-white text-slate-800 hover:underline font-semibold tracking-wider"
+                      href={item.href}>
+                    {item.label}
+                </Link>
+            ))}
         </div>
         <div className="flex space-x-6">
             <DarkThemeToggle/>

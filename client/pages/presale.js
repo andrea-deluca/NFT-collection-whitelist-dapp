@@ -15,7 +15,7 @@ export default function Presale() {
     // presaleEnded keeps track of whether the presale ended
     const [presaleEnded, setPresaleEnded] = useState(false)
     // loading is set to true when we are waiting for a transaction to get mined
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     // checks if the currently connected MetaMask wallet is the owner of the contract
     const [isOwner, setIsOwner] = useState(false)
     // tokenIdsMinted keeps track of the number of tokenIds that have been minted
@@ -24,6 +24,7 @@ export default function Presale() {
     const web3ModalRef = useRef()
 
     const [paused, setPaused] = useState(false)
+    const [loadPage, setLoadPage] = useState(true)
 
     /**
      * Returns a Provider or Signer object representing the Ethereum RPC with or without the
@@ -376,11 +377,11 @@ export default function Presale() {
             })
             connectWallet();
 
-            setup().finally(() => setLoading(false))
+            setup().finally(() => setLoadPage(false))
         }
     }, [walletConnected])
 
-    if (!loading)
+    if (!loadPage)
         return (
             <>
                 <Head>
