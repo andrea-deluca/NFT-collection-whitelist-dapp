@@ -6,6 +6,7 @@ const navigation = [
     {label: "Home", href: "/"},
     {label: "Presale", href: "/presale"},
     {label: "ICO", href: "/ico"},
+    {label: "DAO", href: "/dao"},
 ]
 
 const NavigationBar = () => <Navbar
