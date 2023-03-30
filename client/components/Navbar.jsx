@@ -7,6 +7,7 @@ const navigation = [
     {label: "Presale", href: "/presale"},
     {label: "ICO", href: "/ico"},
     {label: "DAO", href: "/dao"},
+    {label: "Exchange", href: "/exchange"},
 ]
 
 const NavigationBar = () => <Navbar

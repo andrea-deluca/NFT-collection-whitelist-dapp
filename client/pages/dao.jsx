@@ -308,7 +308,7 @@ const DAO = () => {
         else
             return <div className={"flex flex-col space-y-6"}>
                 <div className={"flex flex-col space-y-2"}>
-                    <Label for={"fake-nft-token-id"}>Fake NFT Token ID to Purchase</Label>
+                    <Label htmlFor={"fake-nft-token-id"}>Fake NFT Token ID to Purchase</Label>
                     <TextInput
                         id={"fake-nft-token-id"}
                         type="number"
